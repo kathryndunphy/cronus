@@ -21,6 +21,8 @@ $(document).ready(function () {
     let signUpPassword = $("#signup-password-input");
 
     const loginButtonClick = function () {
+        $(".errorEmail").html("");
+        $(".errorPassword").html("");
         let emailValue = email.val();
         let passwordValue = password.val();
         if (firebase.auth().currentUser) {
@@ -28,11 +30,11 @@ $(document).ready(function () {
             firebase.auth().signOut();
         } else {
             if (emailValue.length < 4) {
-                alert('Please enter an email address.');
+                $(".errorEmail").html("Email is too short!");
                 return;
             }
             if (passwordValue.length < 4) {
-                alert('Please enter a password.');
+                $(".errorPassword").html("Password is too short!");
                 return;
             }
             // Sign in with email and pass.
@@ -41,27 +43,30 @@ $(document).ready(function () {
                 let errorCode = error.code;
                 let errorMessage = error.message;
                 if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
+                    $(".errorPassword").html("Password is incorrect!");
+                } else if(errorCode === "auth/user-not-found") {
+                    $(".errorEmail").html(errorMessage);
                 } else {
-                    alert(errorMessage);
+                    $(".errorPassword").html(errorMessage);
                 }
                 console.log(error);
             });
         }
-        $("#loginModal").modal("hide");
         email.val("");
         password.val("");
     };
 
     const signUpButtonClick = function () {
+        $(".errorEmail").html("");
+        $(".errorPassword").html("");
         let emailValue = signUpEmail.val();
         let passwordValue = signUpPassword.val();
         if (emailValue.length < 4) {
-            alert('Please enter an email address.');
+            $(".errorEmail").html("Email is too short!");
             return;
         }
         if (passwordValue.length < 4) {
-            alert('Please enter a password.');
+            $(".errorPassword").html("Password is too short!");
             return;
         }
         // Sign up and in with email and pass.
@@ -70,13 +75,12 @@ $(document).ready(function () {
             let errorCode = error.code;
             let errorMessage = error.message;
             if (errorCode == 'auth/weak-password') {
-                alert('The password is too weak.');
+                $(".errorPassword").html("Password is too weak!");
             } else {
-                alert(errorMessage);
+                $(".errorEmail").html(errorMessage);
             }
             console.log(error);
         });
-        $("#signUpModal").modal("hide");
         email.val("");
         password.val("");
     };
@@ -86,21 +90,31 @@ $(document).ready(function () {
     };
 
     firebase.auth().onAuthStateChanged(function (user) {
+        $(".errorEmail").html("");
+        $(".errorPassword").html("");
         if (user) {
+            $("#loginModal").modal("hide");
+            $("#signUpModal").modal("hide");
             loginModalButton.hide();
             signUpModalButton.hide();
             signOutButton.prop("hidden", false);
-            $("h1.display-4").html("logged in!");
+            $("h1.display-4").html(user.email);
             $("#signUpModal").modal("hide");
         } else {
             // User is signed out.
             signOutButton.prop("hidden", true);
             loginModalButton.show();
             signUpModalButton.show();
-            $("h1.display-4").html("Hello, world!");
+            $("h1.display-4").html("Cronus");
         }
     });
     loginButton.on("click", loginButtonClick);
     signUpButton.on("click", signUpButtonClick);
     signOutButton.on("click", signOutButtonClick);
+    const resetErrors = function() {
+        $(".errorEmail").html("");
+        $(".errorPassword").html("");
+    };
+    $("#loginModal").on("show.bs.modal", resetErrors());
+    $("#signUpModal").on("show.bs.modal", resetErrors());
 });
