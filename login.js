@@ -19,10 +19,12 @@ $(document).ready(function () {
     let signOutButton = $(".signout-button");
     let signUpEmail = $("#signup-email-input");
     let signUpPassword = $("#signup-password-input");
+    let errorSpan = $(".error");
+    let loginModal = $("#loginModal");
+    let signUpModal = $("#signUpModal");
 
     const loginButtonClick = function () {
-        $(".errorEmail").html("");
-        $(".errorPassword").html("");
+        resetErrors();
         let emailValue = email.val();
         let passwordValue = password.val();
         if (firebase.auth().currentUser) {
@@ -30,11 +32,11 @@ $(document).ready(function () {
             firebase.auth().signOut();
         } else {
             if (emailValue.length < 4) {
-                $(".errorEmail").html("Email is too short!");
+                errorSpan.html("Email is too short!");
                 return;
             }
             if (passwordValue.length < 4) {
-                $(".errorPassword").html("Password is too short!");
+                errorSpan.html("Password is too short!");
                 return;
             }
             // Sign in with email and pass.
@@ -43,11 +45,11 @@ $(document).ready(function () {
                 let errorCode = error.code;
                 let errorMessage = error.message;
                 if (errorCode === 'auth/wrong-password') {
-                    $(".errorPassword").html("Password is incorrect!");
-                } else if(errorCode === "auth/user-not-found") {
-                    $(".errorEmail").html(errorMessage);
+                    errorSpan.html("Password is incorrect!");
+                } else if (errorCode === "auth/user-not-found") {
+                    errorSpan.html(errorMessage);
                 } else {
-                    $(".errorPassword").html(errorMessage);
+                    errorSpan.html(errorMessage);
                 }
                 console.log(error);
             });
@@ -57,16 +59,15 @@ $(document).ready(function () {
     };
 
     const signUpButtonClick = function () {
-        $(".errorEmail").html("");
-        $(".errorPassword").html("");
+        resetErrors();
         let emailValue = signUpEmail.val();
         let passwordValue = signUpPassword.val();
         if (emailValue.length < 4) {
-            $(".errorEmail").html("Email is too short!");
+            errorSpan.html("Email is too short!");
             return;
         }
         if (passwordValue.length < 4) {
-            $(".errorPassword").html("Password is too short!");
+            errorSpan.html("Password is too short!");
             return;
         }
         // Sign up and in with email and pass.
@@ -75,9 +76,9 @@ $(document).ready(function () {
             let errorCode = error.code;
             let errorMessage = error.message;
             if (errorCode == 'auth/weak-password') {
-                $(".errorPassword").html("Password is too weak!");
+                errorSpan.html("Password is too weak!");
             } else {
-                $(".errorEmail").html(errorMessage);
+                errorSpan.html(errorMessage);
             }
             console.log(error);
         });
@@ -90,16 +91,13 @@ $(document).ready(function () {
     };
 
     firebase.auth().onAuthStateChanged(function (user) {
-        $(".errorEmail").html("");
-        $(".errorPassword").html("");
         if (user) {
-            $("#loginModal").modal("hide");
-            $("#signUpModal").modal("hide");
+            loginModal.modal("hide");
+            signUpModal.modal("hide");
             loginModalButton.hide();
             signUpModalButton.hide();
             signOutButton.prop("hidden", false);
             $("h1.display-4").html(user.email);
-            $("#signUpModal").modal("hide");
         } else {
             // User is signed out.
             signOutButton.prop("hidden", true);
@@ -108,13 +106,17 @@ $(document).ready(function () {
             $("h1.display-4").html("Cronus");
         }
     });
+
     loginButton.on("click", loginButtonClick);
     signUpButton.on("click", signUpButtonClick);
     signOutButton.on("click", signOutButtonClick);
-    const resetErrors = function() {
-        $(".errorEmail").html("");
-        $(".errorPassword").html("");
+
+    const resetErrors = function () {
+        errorSpan.html("");
     };
-    $("#loginModal").on("show.bs.modal", resetErrors());
-    $("#signUpModal").on("show.bs.modal", resetErrors());
+
+    loginModal.on("show.bs.modal", resetErrors);
+    signUpModal.on("show.bs.modal", resetErrors);
+    loginModal.on("hide.bs.modal", resetErrors);
+    signUpModal.on("hide.bs.modal", resetErrors);
 });
