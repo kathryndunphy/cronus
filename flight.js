@@ -440,5 +440,17 @@ $(document).ready(function () {
         }
     };
 
+    // const airlineNameArray = [];
+    // const returnAirlineNameArray = function() {
+    //     $.ajax({
+    //         url: "https://api.skypicker.com/airlines",
+    //         dataType: "json"
+    //     }).then(function(response){
+    //         airlineNameArray.push(response);
+    //     });
+    // };
+    // returnAirlineNameArray();
+    // console.log(airlineNameArray);
+
     $(".search").on("click", searchForFlights);
 });
