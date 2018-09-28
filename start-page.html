@@ -15,6 +15,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
     <script src="login.js"></script>
     <script src="flight.js"></script>
 </head>
@@ -83,13 +84,12 @@
                         <div class="form-group">
                             <label for="signup-email-input" class="col-form-label">Email</label>
                             <input type="email" class="form-control" id="signup-email-input">
-                            <span class="errorEmail"></span>
                         </div>
                         <div class="form-group">
                             <label for="signup-password-input" class="col-form-label">Password</label>
                             <input type="password" class="form-control" id="signup-password-input">
-                            <span class="errorPassword"></span>
                         </div>
+                        <span class="error text-danger"></span>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -101,24 +101,54 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <label for="destination">Destination</label>
                 <input type="text" class="form-control" id=destination list="cityList">
                 <datalist id="cityList"></datalist>
             </div>
-            <div class="col-sm-3">
-                <label for="toDate">Departing</label>
-                <input type="date" class="form-control" id="toDate">
-            </div>
-            <div class="col-sm-3">
-                <label for="fromDate">Arriving</label>
+            <div class="col-sm-4">
+                <label for="fromDate">Departing</label>
                 <input type="date" class="form-control" id="fromDate">
             </div>
-            <div class="col-sm-3">
-                <button type="button" class="btn btn-primary search">Search</button>
+            <div class="col-sm-4">
+                <label for="toDate">Arriving</label>
+                <input type="date" class="form-control" id="toDate">
             </div>
         </div>
     </div>
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary btn-block search">Search</button>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <span class="searchError text-danger text-center"></span>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Airline</th>
+                            <th scope="col">Route</th>
+                            <th scope="col">Duration</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="flightTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 

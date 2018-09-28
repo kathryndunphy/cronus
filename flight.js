@@ -333,7 +333,7 @@ $(document).ready(function () {
         }
     ];
 
-    cityNameAirportCodeArray.forEach(function(elem){
+    cityNameAirportCodeArray.forEach(function (elem) {
         let optionElement = $("<option>");
         optionElement.attr("value", elem.cityName);
         optionElement.html(elem.cityName);
@@ -341,29 +341,103 @@ $(document).ready(function () {
     });
 
     const searchForFlights = function () {
+        let originCity = "Austin, TX";
+        let originAirport = "AUS";
+        let destinationCity = $("#destination").val();
+        let destinationObject = cityNameAirportCodeArray.find(element => element.cityName === destinationCity);
+        let destinationAirport;
+        let inputStartDate = $("#fromDate").val();
+        let inputEndDate = $("#toDate").val();
+        let limit = 10;
+        let currency = "USD";
+        let partner = "picky";
+
+        let searchError = $(".searchError");
+        searchError.html("");
+
+        let startDateQueryParam = moment(inputStartDate).format("DD/MM/YYYY");
+        let endDateQueryParam = moment(inputEndDate).format("DD/MM/YYYY");
+
+        if (!destinationCity) {
+            searchError.html("Destination city cannot be empty!");
+            return;
+        }
+        if (!destinationObject) {
+            searchError.html("Invalid city. Please select a city from the list.");
+            return;
+        } else {
+            destinationAirport = destinationObject.airportCode;
+            // console.log(destinationAirport);
+        }
+        if (!inputStartDate) {
+            searchError.html("Departure date cannot be empty.");
+            return;
+        }
+        if (!inputEndDate) {
+            searchError.html("Arrival date cannot be empty.");
+            return;
+        }
+        if (moment(inputStartDate).isSameOrBefore(moment())) {
+            searchError.html("Your Departure date cannot be earlier than today.");
+            return;
+        }
+        if (inputStartDate > inputEndDate) {
+            searchError.html("Departure and Arrival dates are incorrect");
+            return;
+        }
+
+        let url = "https://api.skypicker.com/flights";
+        let queryParams = {
+            flyFrom: originAirport,
+            to: destinationAirport,
+            dateFrom: startDateQueryParam,
+            dateTo: startDateQueryParam,
+            returnFrom: endDateQueryParam,
+            partner: partner,
+            limit: limit,
+            curr: currency
+        };
+
         $.ajax({
-            type: "GET",
-            url: "",
-            data: {
-                "TripType": "O",
-                "NoOfAdults": 1,
-                "NoOfChilds": 0,
-                "NoOfInfants": 0,
-                "ClassType": "Economy",
-                "OriginDestination": [{
-                    "Origin": "JFK",
-                    "Destination": "SFO",
-                    "TravelDate": "07/14/2017"
-                }]
-            },
-            headers: {
-                "apikey": "35e30f9c-520a-4",
-                "Content-Type": "application/json",
-                "mode": "sandbox",
-            }
+            url: url,
+            data: queryParams,
+            dataType: "json"
         }).then(function (response) {
-            console.log(response);
+            populateFlightData(response.data);
         });
+    };
+
+    const populateFlightData = function (flightData) {
+        // console.log(flightData);
+        if (flightData.length < 1) {
+            $(".errorRow").html(`Sorry! There are no flights to ${destinationCity} from ${originAirport}`);
+        } else {
+            for (let i = 0; i < flightData.length; i++) {
+                let newRow = $("<tr>");
+                let airlineCell = $("<td>");
+                let routeCell = $("<td>");
+                let durationCell = $("<td>");
+                let priceCell = $("<td>");
+
+                durationCell.html(flightData[i].fly_duration);
+                priceCell.html(flightData[i].price);
+
+                for (let j = 0; j < flightData[i].route.length; j++) {
+                    let airlineRow = $("<tr>");
+                    airlineRow.text(flightData[i].route[j].airline);
+                    airlineCell.append(airlineRow);
+                    let routeRow = $("<tr>");
+                    routeRow.text(flightData[i].route[j].cityFrom + " to " + flightData[i].route[j].cityTo);
+                    routeCell.append(routeRow);
+                }
+                
+                newRow.append(airlineCell);
+                newRow.append(routeCell);
+                newRow.append(durationCell);
+                newRow.append(priceCell);
+                $(".flightTableBody").append(newRow);
+            }
+        }
     };
 
     $(".search").on("click", searchForFlights);
