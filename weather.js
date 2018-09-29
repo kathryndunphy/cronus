@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("#getWeather").click(function () {
         let city = $("#destination").val();
-        let url = "http://api.openweathermap.org/data/2.5/forecast";
+        let url = "https://api.openweathermap.org/data/2.5/forecast";
         let queryParams = {
             q: city,
             appid: "daab60fac03700b51f256bbde6449103",
