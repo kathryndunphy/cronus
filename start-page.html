@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Starting page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="login.js"></script>
+    <script src="flight.js"></script>
+    <script src="weather.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron text-center">
+                    <h1 class="display-4">Cronus</h1>
+                    <button type="button" class="btn btn-primary login-modal-button" data-toggle="modal" data-target="#loginModal">
+                        Login
+                    </button>
+                    <button type="button" class="btn btn-primary signup-modal-button" data-toggle="modal" data-target="#signUpModal">
+                        Sign Up
+                    </button>
+                    <button type="button" class="btn btn-primary signout-button" hidden>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="email-input" class="col-form-label">Email</label>
+                            <input type="email" class="form-control" id="email-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="password-input" class="col-form-label">Password</label>
+                            <input type="password" class="form-control" id="password-input">
+                        </div>
+                        <span class="error text-danger"></span>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary login-button">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sign Up Modal -->
+    <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signUpModalLabel">Sign Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="signup-email-input" class="col-form-label">Email</label>
+                            <input type="email" class="form-control" id="signup-email-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password-input" class="col-form-label">Password</label>
+                            <input type="password" class="form-control" id="signup-password-input">
+                        </div>
+                        <span class="error text-danger"></span>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary signup-button">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="destination">Destination</label>
+                <input type="text" class="form-control" id=destination list="cityList">
+                <datalist id="cityList"></datalist>
+            </div>
+            <div class="col-sm-4">
+                <label for="fromDate">Departing</label>
+                <input type="date" class="form-control" id="fromDate">
+            </div>
+            <div class="col-sm-4">
+                <label for="toDate">Arriving</label>
+                <input type="date" class="form-control" id="toDate">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary btn-block search">Search</button>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <span class="searchError text-danger text-center"></span>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Airline</th>
+                            <th scope="col">Route</th>
+                            <th scope="col">Duration</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="flightTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" id="getWeather" class="btn btn-primary" data-toggle="modal" data-target="#weatherModal">Get
+                    Weather</button>
+                <button type="button" id="calendar" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal">Calendar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Weather Modal -->
+    <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog" aria-labelledby="weatherModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="weatherModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Max Temp.</th>
+                                <th scope="col">Min Temp.</th>
+                                <th scope="col">Humidity</th>
+                                <th scope="col">Weather Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody class="weatherTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
