@@ -419,6 +419,11 @@ $(document).ready(function () {
                 let routeCell = $("<td>");
                 let durationCell = $("<td>");
                 let priceCell = $("<td>");
+                let linkCell = $("<td>");
+                let link = $("<a>");
+                link.html("Select");
+                link.attr("href", flightData[i].deep_link);
+                linkCell.append(link);
 
                 durationCell.html(flightData[i].fly_duration);
                 priceCell.html(flightData[i].price);
@@ -436,6 +441,7 @@ $(document).ready(function () {
                 newRow.append(routeCell);
                 newRow.append(durationCell);
                 newRow.append(priceCell);
+                newRow.append(linkCell);
                 $(".flightTableBody").append(newRow);
             }
         }
