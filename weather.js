@@ -13,6 +13,7 @@ $(document).ready(function () {
             data: queryParams,
             dataType: "json"
         }).then(function (response) {
+            console.log(response);
             populateWeatherTable(response.list);
         });
     });

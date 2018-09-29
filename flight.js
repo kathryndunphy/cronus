@@ -403,14 +403,15 @@ $(document).ready(function () {
             data: queryParams,
             dataType: "json"
         }).then(function (response) {
-            populateFlightData(response.data);
+            console.log(response);
+            populateFlightData(response.data, originCity, destinationCity);
         });
     };
 
-    const populateFlightData = function (flightData) {
+    const populateFlightData = function (flightData, originCity, destinationCity) {
         // console.log(flightData);
         if (flightData.length < 1) {
-            $(".errorRow").html(`Sorry! There are no flights to ${destinationCity} from ${originAirport}`);
+            $(".searchError").html(`Sorry! There are no flights to ${destinationCity} from ${originCity}`);
         } else {
             for (let i = 0; i < flightData.length; i++) {
                 let newRow = $("<tr>");
