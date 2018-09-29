@@ -103,7 +103,7 @@ $(document).ready(function () {
             signOutButton.prop("hidden", true);
             loginModalButton.show();
             signUpModalButton.show();
-            $("h1.display-4").html("Cronus");
+            $("h1.display-4").html("Cronus Travel");
         }
     });
 
