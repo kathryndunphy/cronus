@@ -18,23 +18,19 @@ $(document).ready(function () {
     });
 
     const populateWeatherTable = function (weatherData) {
+        $("#weatherModalLabel").html("The weather forecast from " + moment().format("MM-DD-YYYY"));
         for (let i = 0; i < weatherData.length; i++) {
             let newRow = $("<tr>");
-            let date = $("<td>");
             let maxTemp = $("<td>");
             let minTemp = $("<td>");
             let humidity = $("<td>");
             let weatherCondition = $("<td>");
 
-            console.log(weatherData[i]);
-
-            date.html(weatherData[i].dt);
             maxTemp.html(weatherData[i].main.temp_max);
             minTemp.html(weatherData[i].main.temp_min);
             humidity.html(weatherData[i].main.humidity);
             weatherCondition.html(weatherData[i].weather[0].main);
 
-            newRow.append(date);
             newRow.append(maxTemp);
             newRow.append(minTemp);
             newRow.append(humidity);
